@@ -1,28 +1,24 @@
 import './App.css'
-import {useQuery} from "@tanstack/react-query";
+import {useQuery, useQueryClient} from "@tanstack/react-query";
+import {QueryClient} from "@tanstack/react-query/build/modern";
+import DataList from "./session02/DataList.tsx";
+import {useState} from "react";
 
 function App() {
 
-  const result =useQuery({
-    queryKey:['Posts'],
-    queryFn: async function(){
-      const data = await fetch('http://127.0.0.1:8000/ads/advertises/')
-      return data.json()
-    }
-  })
+  const [flag, setFlag] = useState(true)
 
-  console.log(result)
-
-  if (result.isPending){
-    return <h1>Loading</h1>
-  }
-  return (
-    <>
-      <ul>
-        {result.data?.map(e=><li key={e.id}>{e.title}</li>)}
-      </ul>
-    </>
-  )
+  return (<>
+    {flag && <>
+    <DataList />
+  <DataList />
+  <DataList />
+  <DataList />
+  <DataList />
+      </>
+      }
+      <span onClick={()=>setFlag(!flag)}>Clik to Toggle</span>
+  </>)
 }
 
 export default App

@@ -8,12 +8,12 @@ function App() {
 
   const [flag, setFlag] = useState(true)
 
+    const client = useQueryClient()
+
   return (<>
     {flag && <>
     <DataList />
-  <DataList />
-  <DataList />
-  <DataList />
+
   <DataList />
       </>
       }

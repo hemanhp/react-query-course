@@ -8,13 +8,11 @@ function App() {
 
   const [flag, setFlag] = useState(true)
 
-    const client = useQueryClient()
 
   return (<>
     {flag && <>
     <DataList />
 
-  <DataList />
       </>
       }
       <span onClick={()=>setFlag(!flag)}>Clik to Toggle</span>

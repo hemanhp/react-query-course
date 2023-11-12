@@ -1,4 +1,5 @@
 from rest_framework import viewsets
+from rest_framework import pagination
 from rest_framework.response import Response
 import django_filters.rest_framework
 from ads.models import Advertise
@@ -11,4 +12,11 @@ class AdvertiseViewSet(viewsets.ModelViewSet):
     serializer_class = AdvertiseSerializer
     filter_backends = [django_filters.rest_framework.DjangoFilterBackend]
     filterset_fields = ['ad_type']
+    pagination_class = None
 
+
+class AdvertisePaginatedView(viewsets.ReadOnlyModelViewSet):
+    queryset = Advertise.objects.all()
+    serializer_class = AdvertiseSerializer
+    filter_backends = [django_filters.rest_framework.DjangoFilterBackend]
+    filterset_fields = ['ad_type']

@@ -3,6 +3,7 @@ import AdsList from "./AdsList.tsx";
 import useAds from "./repo/useAds.tsx";
 import {useState} from "react";
 import usdAdsPaginated, {AdsPageParams} from "./repo/usdAdsPaginated.tsx";
+import useInfiniteAds from "./repo/useInfiniteAds.tsx";
 
 function AdsContainer(){
      const queryClient = useQueryClient()
@@ -13,12 +14,13 @@ function AdsContainer(){
     })
 
 
-    const { data, totalItem} = usdAdsPaginated(pageParams)
+    // const { data, totalItem} = usdAdsPaginated(pageParams)
+    const { data,hasNextPage, fetchNextPage, isFetchingNextPage } = useInfiniteAds()
 
         return<>.
             <span onClick={()=>queryClient.cancelQueries({queryKey:['Ads', pageParams]})}>Cancel</span>
             <input type="text" onChange={(e=>setPageParams({...pageParams, search:e.target.value}))}/>
-            <span>Total Item : {totalItem}</span>
+            {/*<span>Total Item : {totalItem}</span>*/}
             <span  onClick={()=>setPageParams({ad_type:pageParams.ad_type, page:pageParams.page+1})}> Next Page</span>
                         <span  onClick={()=>setPageParams({ad_type:pageParams.ad_type, page:pageParams.page-1})}> Prev Page</span>
 
@@ -28,6 +30,9 @@ function AdsContainer(){
                 <span  onClick={()=>setPageParams({ad_type:'sell', page:1})}>Sell</span> |
             </div>
             {data && <AdsList adsList={data} />}
+
+            { hasNextPage && <span onClick={()=>fetchNextPage()}>Load More</span>}
+            {isFetchingNextPage && <span>Loading</span> }
         </>
 
 

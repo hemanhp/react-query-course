@@ -11,7 +11,7 @@ function useAdsPaginated(pageParams:AdsPageParams){
 
     let totalItem = 0;
         const {isPending, data} = useQuery({
-            enabled:(pageParams.search!=null && pageParams.search.length>2),
+            // enabled:(pageParams.search!=null && pageParams.search.length>2),
         queryKey: ['Ads',pageParams ],
         queryFn: async function({queryKey,signal}){
             const url = 'http://127.0.0.1:8000/ads/advertises/paged/'

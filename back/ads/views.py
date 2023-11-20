@@ -24,7 +24,7 @@ class AdvertisePaginatedView(viewsets.ReadOnlyModelViewSet):
     search_fields = ['title',]
 
     def list(self, request, *args, **kwargs):
-        time.sleep(10)
+        time.sleep(1)
         queryset = self.filter_queryset(self.get_queryset())
 
         page = self.paginate_queryset(queryset)

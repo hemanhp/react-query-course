@@ -1,7 +1,7 @@
 import {useQuery, useQueryClient} from "@tanstack/react-query";
 import AdsList from "./AdsList.tsx";
 import useAds from "./repo/useAds.tsx";
-import {useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import usdAdsPaginated, {AdsPageParams} from "./repo/usdAdsPaginated.tsx";
 import useInfiniteAds from "./repo/useInfiniteAds.tsx";
 
@@ -13,9 +13,34 @@ function AdsContainer(){
         ad_type:'all'
     })
 
+    const loadingTarget = useRef(null)
 
     // const { data, totalItem} = usdAdsPaginated(pageParams)
     const { data,hasNextPage, fetchNextPage, isFetchingNextPage } = useInfiniteAds()
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            entries => {
+                if(hasNextPage && entries[0].isIntersecting){
+                    fetchNextPage()
+                }
+            },{
+                threshold:1
+            }
+        )
+
+        if(loadingTarget.current){
+            observer.observe(loadingTarget.current)
+        }
+
+        return ()=>{
+            if(loadingTarget.current){
+            observer.unobserve(loadingTarget.current)
+        }
+        }
+
+
+    }, [loadingTarget, hasNextPage, fetchNextPage]);
 
         return<>.
             <span onClick={()=>queryClient.cancelQueries({queryKey:['Ads', pageParams]})}>Cancel</span>
@@ -31,8 +56,11 @@ function AdsContainer(){
             </div>
             {data && <AdsList adsList={data} />}
 
-            { hasNextPage && <span onClick={()=>fetchNextPage()}>Load More</span>}
-            {isFetchingNextPage && <span>Loading</span> }
+            {/*{ hasNextPage && <span onClick={()=>fetchNextPage()}>Load More</span>}*/}
+            {isFetchingNextPage && <span className={"block mx-auto w-12 h-12 border-8 border-blue-700 rounded-full border-t-transparent animate-spin"}></span> }
+
+            <div ref={loadingTarget}></div>
+
         </>
 
 

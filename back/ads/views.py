@@ -1,5 +1,6 @@
 from rest_framework import viewsets
 from rest_framework import pagination
+from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
 import django_filters.rest_framework
 from ads.models import Advertise
@@ -14,6 +15,7 @@ class AdvertiseViewSet(viewsets.ModelViewSet):
     filter_backends = [django_filters.rest_framework.DjangoFilterBackend]
     filterset_fields = ['ad_type']
     pagination_class = None
+    parser_classes = (MultiPartParser, FormParser)
 
     def retrieve(self, request, *args, **kwargs):
         time.sleep(5)

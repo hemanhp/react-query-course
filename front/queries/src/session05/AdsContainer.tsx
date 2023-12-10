@@ -6,6 +6,8 @@ import usdAdsPaginated, {AdsPageParams} from "./repo/usdAdsPaginated.tsx";
 import useInfiniteAds from "./repo/useInfiniteAds.tsx";
 import {Advertise} from "./repo/models.ts";
 import AdsDetail from "./AdsDetail.tsx";
+import AdsForm from "./AdsForm.tsx";
+import useCreateAds from "./repo/useCreateAds.tsx";
 
 function AdsContainer(){
      const queryClient = useQueryClient()
@@ -21,7 +23,7 @@ function AdsContainer(){
     const { data,hasNextPage, fetchNextPage, isFetchingNextPage } = useInfiniteAds()
     const [showDrawer, setShowDrawer] = useState(false)
     const [selectAds, setSelectedAds] = useState<Advertise| null>(null)
-
+    const {mutate, mutateAsync} = useCreateAds()
     useEffect(() => {
         const observer = new IntersectionObserver(
             entries => {
@@ -70,9 +72,15 @@ function AdsContainer(){
             {isFetchingNextPage && <span className={"block mx-auto w-12 h-12 border-8 border-blue-700 rounded-full border-t-transparent animate-spin"}></span> }
 
             <div ref={loadingTarget}></div>
-            <div className={`fixed h-screen top-0 left-0 bg-white transition-all duration-200 ${showDrawer? 'w-1/5': 'w-0'}`}>
-                { showDrawer && selectAds && <AdsDetail ads={selectAds} />}
-                {showDrawer && <span onClick={()=>{setShowDrawer(false); setSelectedAds(null);}}> Close</span>}
+            {/*<div className={`fixed h-screen top-0 left-0 bg-white transition-all duration-200 ${showDrawer? 'w-1/5': 'w-0'}`}>*/}
+            {/*    { showDrawer && selectAds && <AdsDetail ads={selectAds} />}*/}
+            {/*    {showDrawer && <span onClick={()=>{setShowDrawer(false); setSelectedAds(null);}}> Close</span>}*/}
+            {/*</div>*/}
+
+            <div className={`fixed w-screen bottom-0 left-0 bg-white transition-all duration-200 ${showDrawer? 'h-1/3': 'h-0'}`}>
+                {showDrawer && <AdsForm onSubmit={(data)=>{
+                    mutateAsync({...data, image:data.image[0]}).then(()=>setShowDrawer(false))
+                }}></AdsForm>}
             </div>
         </>
 

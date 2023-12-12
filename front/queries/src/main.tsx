@@ -11,6 +11,8 @@ const client = new QueryClient({
             staleTime:10000,
             gcTime: 50000,
 
+        }, mutations:{
+
         }
     }
 })

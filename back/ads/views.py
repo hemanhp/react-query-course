@@ -23,6 +23,9 @@ class AdvertiseViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
 
+    def perform_update(self, serializer):
+        time.sleep(8)
+        serializer.save()
 
 class AdvertisePaginatedView(viewsets.ReadOnlyModelViewSet):
     queryset = Advertise.objects.all()

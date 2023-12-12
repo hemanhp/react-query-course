@@ -8,6 +8,7 @@ import {Advertise} from "./repo/models.ts";
 import AdsDetail from "./AdsDetail.tsx";
 import AdsForm from "./AdsForm.tsx";
 import useCreateAds from "./repo/useCreateAds.tsx";
+import useUpdateAds from "./repo/useUpdateAds.tsx";
 
 function AdsContainer(){
      const queryClient = useQueryClient()
@@ -24,6 +25,7 @@ function AdsContainer(){
     const [showDrawer, setShowDrawer] = useState(false)
     const [selectAds, setSelectedAds] = useState<Advertise| null>(null)
     const {mutate, mutateAsync} = useCreateAds()
+    const {mutate:update, mutateAsync:updateAsync} = useUpdateAds()
     useEffect(() => {
         const observer = new IntersectionObserver(
             entries => {
@@ -77,9 +79,16 @@ function AdsContainer(){
             {/*    {showDrawer && <span onClick={()=>{setShowDrawer(false); setSelectedAds(null);}}> Close</span>}*/}
             {/*</div>*/}
 
-            <div className={`fixed w-screen bottom-0 left-0 bg-white transition-all duration-200 ${showDrawer? 'h-1/3': 'h-0'}`}>
-                {showDrawer && <AdsForm onSubmit={(data)=>{
-                    mutateAsync({...data, image:data.image[0]}).then(()=>setShowDrawer(false))
+            <div className={`fixed w-screen bottom-0 left-0 bg-white transition-all duration-200 ${showDrawer? 'h-1/2': 'h-0'}`}>
+                {showDrawer && <AdsForm initialData={selectAds} onSubmit={(data)=>{
+
+                    if(selectAds){
+                            update({...data, image:data.image[0]});
+                            setShowDrawer(false);
+
+                    }else {
+                        mutateAsync({...data, image: data.image[0]}).then(() => setShowDrawer(false))
+                    }
                 }}></AdsForm>}
             </div>
         </>

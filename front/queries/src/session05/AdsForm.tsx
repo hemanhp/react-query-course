@@ -1,7 +1,9 @@
 import {useForm} from "react-hook-form";
 
-function AdsForm({onSubmit}){
-    const {register, handleSubmit} =useForm()
+function AdsForm({onSubmit, initialData}){
+    const {register, handleSubmit} =useForm({
+        defaultValues:initialData
+    })
     return (<form onSubmit={handleSubmit(onSubmit)} className={"flex flex-col"}>
         Title <input {...register('title')}/>
         Description <textarea {...register('description')}/>

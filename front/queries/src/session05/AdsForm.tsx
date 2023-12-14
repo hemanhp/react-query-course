@@ -1,6 +1,6 @@
 import {useForm} from "react-hook-form";
 
-function AdsForm({onSubmit, initialData}){
+function AdsForm({onSubmit, initialData, onDelete}){
     const {register, handleSubmit} =useForm({
         defaultValues:initialData
     })
@@ -14,6 +14,7 @@ function AdsForm({onSubmit, initialData}){
         </div>
         Image <input type="file" {...register('image')} />
         <input type="submit" value="Save"/>
+        <span onClick={()=>onDelete()}>Delete</span>
     </form>)
 }
 

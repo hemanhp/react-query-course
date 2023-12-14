@@ -9,6 +9,7 @@ import AdsDetail from "./AdsDetail.tsx";
 import AdsForm from "./AdsForm.tsx";
 import useCreateAds from "./repo/useCreateAds.tsx";
 import useUpdateAds from "./repo/useUpdateAds.tsx";
+import useDeleteAds from "./repo/useDeleteAds.tsx";
 
 function AdsContainer(){
      const queryClient = useQueryClient()
@@ -26,6 +27,7 @@ function AdsContainer(){
     const [selectAds, setSelectedAds] = useState<Advertise| null>(null)
     const {mutate, mutateAsync} = useCreateAds()
     const {mutate:update, mutateAsync:updateAsync} = useUpdateAds()
+    const {isPending:deletePending,undoDelete ,mutate:deleteItem, mutateAsync:deleteItemAsync} = useDeleteAds()
     useEffect(() => {
         const observer = new IntersectionObserver(
             entries => {
@@ -63,6 +65,7 @@ function AdsContainer(){
                 <span onClick={()=>setPageParams({ad_type:'all', page:1})}>All</span> |
                 <span  onClick={()=>setPageParams({ad_type:'buy', page:1})}>Buy</span> |
                 <span  onClick={()=>setPageParams({ad_type:'sell', page:1})}>Sell</span> |
+                {deletePending && <h2 onClick={()=>undoDelete.current && undoDelete.current()}>Deleting click to undo</h2>}
             </div>
             {data && <AdsList adsList={data} onItemSelected={(a)=>{
 
@@ -80,7 +83,12 @@ function AdsContainer(){
             {/*</div>*/}
 
             <div className={`fixed w-screen bottom-0 left-0 bg-white transition-all duration-200 ${showDrawer? 'h-1/2': 'h-0'}`}>
-                {showDrawer && <AdsForm initialData={selectAds} onSubmit={(data)=>{
+                {showDrawer && <AdsForm initialData={selectAds}
+                                        onDelete={()=>{
+                                            deleteItem(selectAds);
+                                            setShowDrawer(false);
+                                        }}
+                                        onSubmit={(data)=>{
 
                     if(selectAds){
                             update({...data, image:data.image[0]});
